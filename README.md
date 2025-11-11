@@ -1,4 +1,9 @@
-# MCP Cerebra Legal Server
+# Prighter Legal Research MCP (Experimental Fork)
+
+Prighter maintains this repository as an internal fork of the upstream MCP Cerebra Legal Server project so we can safely experiment with EU-legal research workflows before contributing improvements back. The upstream authors deserve full credit for the core design; this fork primarily carries deployment tweaks and documentation for our internal use.
+
+- GitHub (fork): https://github.com/Prighter/legal-research-mcp
+- Primary goal: in-house experimentation with MCP deployments for legal research
 
 Enterprise-grade HTTP/STDIO MCP server for legal reasoning and analysis with advanced citation management and EU legal database integration.
 
@@ -29,6 +34,12 @@ Enterprise-grade HTTP/STDIO MCP server for legal reasoning and analysis with adv
 - **EU Legal Integration** - Access to 138,911+ EU legal documents
 - **Template Generation** - Domain-specific legal analysis templates
 - **Quality Feedback** - AI-powered analysis quality assessment
+
+## 🔄 About This Fork
+
+- Maintained by Prighter's legal engineering team solely for internal experimentation.
+- Tracks the upstream MCP Cerebra Legal Server project while adding deployment docs, defaults, and integrations specific to `legal-research-mcp`.
+- Changes that prove useful are contributed back upstream after review; breaking experiments may live here only.
 
 ## 🎯 Specialized Legal Domains
 
@@ -73,8 +84,8 @@ Council Directive 2004/18/EC of 31 March 2004 (on the coordination of procedures
 ## 🛠 Installation & Setup
 
 ```bash
-git clone https://github.com/your-org/mcp-cerebra-legal-server
-cd mcp-cerebra-legal-server  
+git clone https://github.com/Prighter/legal-research-mcp.git
+cd legal-research-mcp  
 npm install
 npm run build
 ```
@@ -124,7 +135,7 @@ docker run -p 3000:3000 mcp-legal-server
 ```
 
 ### 4. One-Click Deploy
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-org/mcp-cerebra-legal-server)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Prighter/legal-research-mcp)
 
 See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
 
@@ -151,7 +162,7 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
   "mcpServers": {
     "cerebra-legal": {
       "command": "node",
-      "args": ["/path/to/mcp-cerebra-legal-server/build/stdio-server.js"]
+      "args": ["/path/to/legal-research-mcp/build/stdio-server.js"]
     }
   }
 }
@@ -257,6 +268,10 @@ The server generates professional legal citations with direct EUR-Lex links:
 ```
 
 See [CITATION_EXAMPLES.md](./CITATION_EXAMPLES.md) for more examples.
+
+## 🙏 Upstream Credit
+
+`legal-research-mcp` is intentionally a living fork of the upstream MCP Cerebra Legal Server project. The upstream maintainers conceived the architecture, tools, and majority of the codebase; Prighter only layers internal deployment defaults and experiments on top. Whenever possible, we open pull requests upstream so improvements are shared back with the wider community.
 
 ## 🤝 Contributing
 
