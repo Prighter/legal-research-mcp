@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "name": "mcp-cerebra-legal-server",
+  "builds": [
+    {
+      "src": "build/http-server.js",
+      "use": "@vercel/node",
+      "config": {
+        "maxLambdaSize": "50mb"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/sse",
+      "dest": "/build/http-server.js"
+    },
+    {
+      "src": "/tools",
+      "dest": "/build/http-server.js"
+    },
+    {
+      "src": "/health",
+      "dest": "/build/http-server.js"
+    },
+    {
+      "src": "/",
+      "dest": "/build/http-server.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "MCP_MODE": "http"
+  },
+  "functions": {
+    "build/http-server.js": {
+      "maxDuration": 30
+    }
+  }
+}

@@ -1,329 +1,284 @@
-# Cerebra Legal MCP Server
+# MCP Cerebra Legal Server
 
-An enterprise-grade MCP server for legal reasoning and analysis based on the "think" tool concept from [Anthropic's engineering blog](https://www.anthropic.com/engineering/claude-think-tool).
+Enterprise-grade HTTP/STDIO MCP server for legal reasoning and analysis with advanced citation management and EU legal database integration.
 
-## Overview
+## 🌐 Deployment Ready
 
-Cerebra Legal provides three powerful tools for legal reasoning and analysis:
+### HTTP Mode (NEW!)
+- **Deploy to**: Vercel, Railway, Render, Docker
+- **Protocol**: JSON-RPC over Server-Sent Events (SSE)  
+- **Access**: HTTPS endpoints for non-technical users
+- **Integration**: Direct URL configuration in Claude Desktop
 
-1. **legal_think** - A structured legal reasoning tool that helps analyze complex legal issues with domain-specific guidance and templates.
-2. **legal_ask_followup_question** - A specialized tool for asking follow-up questions in legal contexts with domain-specific options.
-3. **legal_attempt_completion** - A tool for presenting legal analysis results with proper structure and citation formatting.
+### STDIO Mode  
+- **Use case**: Local development, CLI tools
+- **Protocol**: JSON-RPC over stdio
+- **Performance**: Optimal for desktop applications
 
-The server automatically detects legal domains (ANSC contestation, consumer protection, contract analysis) and provides domain-specific guidance, templates, and feedback.
+## 🚀 Features
 
-## Features
+### Core Legal Tools
+- **`legal_think`** - Structured legal reasoning with domain-specific guidance
+- **`legal_ask_followup_question`** - Intelligent follow-up questions for legal analysis  
+- **`legal_attempt_completion`** - Professional legal document formatting
+- **`legal_verify_with_api`** - Real-time verification against EU legal databases
 
-- **Domain Detection**: Automatically identifies the legal domain of the analysis
-- **Domain-Specific Guidance**: Provides tailored guidance for different legal domains
-- **Structured Templates**: Offers domain-specific templates for legal analysis
-- **Citation Formatting**: Properly formats legal citations
-- **Thought Quality Analysis**: Provides feedback on legal reasoning quality
-- **Revision Support**: Allows for revising previous thoughts
+### Advanced Capabilities  
+- **Domain Detection** - Automatic identification of legal areas (ANSC, consumer protection, contracts)
+- **Citation Management** - Professional citations with direct EUR-Lex links
+- **EU Legal Integration** - Access to 138,911+ EU legal documents
+- **Template Generation** - Domain-specific legal analysis templates
+- **Quality Feedback** - AI-powered analysis quality assessment
 
-## Installation
+## 🎯 Specialized Legal Domains
+
+### ANSC Contestations
+- Procurement law analysis with Law 131/2015 references
+- Technical specification evaluation  
+- Award criteria assessment
+- ANSC precedent integration
+
+### Consumer Protection
+- Warranty and guarantee analysis
+- Product safety compliance
+- Consumer rights evaluation
+- Burden of proof assessment
+
+### Contract Analysis  
+- Civil Code provision analysis
+- Contractual clause evaluation
+- Obligation and liability assessment
+- Enforceability analysis
+
+## 📚 EU Legal Database Access
+
+Integrated with official EU legal sources:
+- **EUR-Lex**: 138,911 documents (1951-2013)
+- **PreLex**: 31,173 inter-institutional procedures (1969-2011)  
+- **Council Voting**: 590 legislative acts (2006-2011)
+
+## 🔗 Enhanced Citation System
+
+### Auto-Generated Citations
+```
+Council Directive 2004/18/EC of 31 March 2004 (on the coordination of procedures for the award of public works contracts) [EUR-Lex](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32004L0018)
+```
+
+### Inline References  
+- Automatic [1], [2], [3] numbering
+- Professional citation lists
+- Direct links to legal sources
+- CELEX number integration
+
+## 🛠 Installation & Setup
 
 ```bash
-# Clone the repository
-git clone https://github.com/yoda-digital/mcp-cerebra-legal-server.git
-cd mcp-cerebra-legal-server
-
-# Install dependencies
+git clone https://github.com/your-org/mcp-cerebra-legal-server
+cd mcp-cerebra-legal-server  
 npm install
-
-# Build the project
 npm run build
 ```
 
-## Usage
+## 🚀 Running the Server
 
-### Running the Server
-
+### HTTP Mode (Recommended for Deployment)
 ```bash
-npm start
+# Development
+npm run dev
+
+# Production  
+npm run start:http
+# Server runs on http://localhost:3000
 ```
 
-### Testing the Server
-
-The repository includes a test client that demonstrates how to interact with the server:
-
+### STDIO Mode (Local CLI)
 ```bash
-# Make the test client executable
-chmod +x test-client.js
-
-# Run the test client
-./test-client.js
+npm run start:stdio
 ```
 
-The test client will:
-1. Start the server
-2. Send a tools/list request to get available tools
-3. Send a legal_think request with a sample thought
-4. Display the server's responses
+### Auto-Detection
+```bash
+npm start  # Defaults to HTTP mode
+MCP_MODE=stdio npm start  # Forces STDIO mode
+```
 
-### Adding to Claude
+## 🌐 Deployment Options
 
-To add the server to Claude, update your MCP settings file with the following configuration:
+### 1. Vercel (Recommended)
+```bash
+npm i -g vercel
+vercel --prod
+```
+Your server: `https://your-deployment.vercel.app/sse`
 
-#### For VSCode Extension
+### 2. Railway
+```bash  
+npm i -g @railway/cli
+railway login && railway up
+```
 
-Edit the file at `~/.config/Code/User/globalStorage/rooveterinaryinc.roo-cline/settings/cline_mcp_settings.json`:
+### 3. Docker
+```bash
+docker build -t mcp-legal-server .
+docker run -p 3000:3000 mcp-legal-server
+```
 
+### 4. One-Click Deploy
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-org/mcp-cerebra-legal-server)
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
+
+## ⚙️ Configuration
+
+### For HTTP Deployment (Non-Technical Users)
 ```json
 {
   "mcpServers": {
     "cerebra-legal": {
-      "command": "node",
-      "args": ["/path/to/mcp-cerebra-legal-server/build/index.js"],
-      "disabled": false,
-      "alwaysAllow": []
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-everything"],
+      "env": {
+        "MCP_SERVER_URL": "https://your-deployment.vercel.app/sse"
+      }
     }
   }
 }
 ```
 
-#### For Claude Desktop App
-
-Edit the file at `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or the equivalent on your platform:
-
+### For Local STDIO Mode
 ```json
 {
   "mcpServers": {
     "cerebra-legal": {
       "command": "node",
-      "args": ["/path/to/mcp-cerebra-legal-server/build/index.js"],
-      "disabled": false,
-      "alwaysAllow": []
+      "args": ["/path/to/mcp-cerebra-legal-server/build/stdio-server.js"]
     }
   }
 }
 ```
 
-### Using the Tools in Claude
+## 📖 Tool Usage Examples
 
-Once the server is added to Claude, you can use the tools in your conversations:
-
-### System Prompt Integration
-
-For optimal AI interaction with these legal tools, it's essential to include proper guidance in the system prompt. These tools follow the same AI → Human interaction model as standard Cline tools but with domain-specific enhancements.
-
-The system prompt should include detailed documentation for each tool:
-
-```
-## legal_think
-Description: A structured legal reasoning tool that helps analyze complex legal issues with domain-specific guidance and templates. This tool enables step-by-step legal analysis with feedback on reasoning quality.
-
-Parameters:
-- thought: (required) The current legal reasoning step
-- thoughtNumber: (required) Current thought number in sequence
-- totalThoughts: (required) Estimated total thoughts needed
-- nextThoughtNeeded: (required) Whether another thought step is needed
-- category: (optional) Legal domain category (auto-detected if not provided)
-- references: (optional) Array of legal references
-- isRevision: (optional) Whether this revises previous thinking
-- revisesThoughtNumber: (optional) Which thought is being reconsidered
-- requestGuidance: (optional) Whether to request domain-specific guidance
-- requestTemplate: (optional) Whether to request a domain-specific template
-
-Usage:
-<legal_think>
-<thought>Your legal reasoning step here</thought>
-<thoughtNumber>Current thought number</thoughtNumber>
-<totalThoughts>Estimated total thoughts</totalThoughts>
-<nextThoughtNeeded>true or false</nextThoughtNeeded>
-<category>Legal domain (optional)</category>
-<references>Array of references (optional)</references>
-<isRevision>true or false (optional)</isRevision>
-<revisesThoughtNumber>Thought number being revised (optional)</revisesThoughtNumber>
-<requestGuidance>true or false (optional)</requestGuidance>
-<requestTemplate>true or false (optional)</requestTemplate>
-</legal_think>
-
-## legal_ask_followup_question
-Description: Ask the user a legal domain-specific question to gather additional information needed to complete the task. This tool enhances the standard ask_followup_question with legal domain detection, terminology formatting, and domain-specific suggested options.
-
-Parameters:
-- question: (required) The question to ask the user. This will be automatically enhanced with appropriate legal terminology.
-- options: (optional) An array of 2-5 options for the user to choose from. If not provided, domain-specific options will be automatically suggested.
-- context: (optional) Additional context to help with domain detection and question formatting.
-
-Usage:
-<legal_ask_followup_question>
-<question>Your question here</question>
-<options>
-Array of options here (optional), e.g. ["Option 1", "Option 2", "Option 3"]
-</options>
-<context>Additional context to help with domain detection (optional)</context>
-</legal_ask_followup_question>
-
-## legal_attempt_completion
-Description: Present the result of your work to the user with proper legal structure and formatting. This tool enhances the standard attempt_completion with legal domain detection, document structuring, and citation formatting.
-
-Parameters:
-- result: (required) The result of the task. This will be automatically formatted with proper legal structure.
-- command: (optional) A CLI command to execute to show a live demo of the result to the user.
-- context: (optional) Additional context to help with domain detection and result formatting.
-
-Usage:
-<legal_attempt_completion>
-<result>
-Your final result description here
-</result>
-<command>Command to demonstrate result (optional)</command>
-<context>Additional context to help with domain detection (optional)</context>
-</legal_attempt_completion>
-```
-
-This guidance ensures the AI understands:
-1. These are specialized versions of standard tools
-2. They maintain the same AI → Human interaction flow
-3. They have additional capabilities and parameters
-4. How to properly format the tool calls
-
-Without this guidance, the AI might not fully leverage the domain-specific capabilities built into these tools.
-
-#### 1. Using legal_think
-
-The legal_think tool helps you analyze complex legal issues with structured thinking:
-
-```
-I need to analyze an ANSC contestation where a claimant argues that technical specifications in a tender were too restrictive.
-```
-
-Claude will use the legal_think tool to:
-- Detect the legal domain (ANSC contestation)
-- Provide domain-specific guidance
-- Offer a structured template for analysis
-- Give feedback on the quality of legal reasoning
-- Support revision of previous thoughts
-
-#### 2. Using legal_ask_followup_question
-
-When Claude needs more information to complete a legal analysis:
-
-```
-What specific provisions of the technical specifications are being challenged?
-```
-
-Claude will use the legal_ask_followup_question tool to:
-- Format the question with appropriate legal terminology
-- Provide domain-specific options for the user to choose from
-- Detect the legal domain for context-aware questioning
-
-#### 3. Using legal_attempt_completion
-
-When Claude is ready to present the final legal analysis:
-
-```
-Based on my analysis, the technical specifications requiring "minimum 5 years experience" appear disproportionate and likely violate Article 33(2) of Law 131/2015 on public procurement.
-```
-
-Claude will use the legal_attempt_completion tool to:
-- Format the conclusion with proper legal structure
-- Extract and format legal citations
-- Organize the analysis into clear sections
-- Provide a professional legal document format
-
-### Tool Input Schemas
-
-#### legal_think
-
+### Legal Reasoning
 ```json
 {
-  "thought": "Analyzing ANSC contestation where claimant argues technical specifications were too restrictive.",
-  "thoughtNumber": 1,
-  "totalThoughts": 5,
-  "nextThoughtNeeded": true,
-  "category": "ansc_contestation",  // Optional, auto-detected if not provided
-  "references": ["Law 131/2015", "ANSC Decision #12345"],  // Optional
-  "isRevision": false,  // Optional
-  "revisesThoughtNumber": null,  // Optional
-  "requestGuidance": true,  // Optional
-  "requestTemplate": true  // Optional
+  "tool": "legal_think",
+  "arguments": {
+    "thought": "Analyzing ANSC contestation regarding restrictive technical specifications",
+    "thoughtNumber": 1,
+    "totalThoughts": 3,
+    "nextThoughtNeeded": true,
+    "requestTemplate": true
+  }
 }
 ```
 
-#### legal_ask_followup_question
-
-```json
+### EU Legal Verification
+```json  
 {
-  "question": "What specific provisions of the technical specifications are being challenged?",
-  "options": [  // Optional, auto-generated if not provided
-    "Are you challenging the experience requirements?",
-    "Are you challenging the technical capacity requirements?",
-    "Are you challenging the financial requirements?",
-    "Are you challenging the certification requirements?"
-  ],
-  "context": "ANSC contestation regarding procurement of IT equipment"  // Optional
+  "tool": "legal_verify_with_api",
+  "arguments": {
+    "query": "EU procurement directive technical specifications",
+    "verificationScope": "eurlex",
+    "maxResults": 10,
+    "includeAnalysis": true
+  }
 }
 ```
 
-#### legal_attempt_completion
+## 📡 HTTP API Endpoints
 
-```json
-{
-  "result": "Based on the analysis of ANSC contestation #12345, the technical specifications requiring 'minimum 5 years experience' appear disproportionate and likely violate Article 33(2) of Law 131/2015 on public procurement.",
-  "command": null,  // Optional
-  "context": "ANSC contestation analysis"  // Optional
-}
-```
+Once deployed, your server exposes:
 
-## Architecture
+- **`GET /`** - Server information and documentation  
+- **`GET /health`** - Health check endpoint
+- **`GET /tools`** - List available tools
+- **`GET /sse`** - Server-Sent Events endpoint for MCP protocol
 
-The server is built with a modular architecture:
-
-- **Domain Detector**: Identifies the legal domain of the analysis
-- **Legal Knowledge Base**: Provides domain-specific guidance and templates
-- **Citation Formatter**: Formats legal citations properly
-- **Tool Implementations**: Handles the logic for each tool
-
-## Development
-
-### Project Structure
-
-```
-mcp-cerebra-legal-server/
-├── src/
-│   ├── shared/           # Shared components
-│   │   ├── DomainDetector.ts
-│   │   ├── LegalKnowledgeBase.ts
-│   │   ├── CitationFormatter.ts
-│   │   └── types.ts
-│   ├── tools/            # Tool implementations
-│   │   ├── LegalThinkTool.ts
-│   │   ├── LegalAskFollowupQuestionTool.ts
-│   │   └── LegalAttemptCompletionTool.ts
-│   ├── utils/            # Utilities
-│   │   └── logger.ts
-│   └── index.ts          # Main server entry point
-├── build/                # Compiled JavaScript
-├── test-client.js        # Test client
-├── package.json
-└── tsconfig.json
-```
-
-### Building
-
+### Testing Your Deployment
 ```bash
-npm run build
+curl https://your-deployment.vercel.app/health
+curl https://your-deployment.vercel.app/tools  
 ```
 
-### Testing
+## 🏗 Architecture
 
-```bash
-# Run the test client
-./test-client.js
+```
+src/
+├── index.ts                 # Main entry point (mode detection)
+├── http-server.ts           # HTTP/SSE server for deployment  
+├── stdio-server.ts          # STDIO server for local use
+├── shared/                  # Shared utilities
+│   ├── CitationFormatter.ts # Citation generation & linking
+│   ├── DomainDetector.ts    # Legal domain identification  
+│   ├── LegalKnowledgeBase.ts# Templates & guidance
+│   ├── EULegalAPIClient.ts  # EU database integration
+│   └── types.ts             # Type definitions
+├── tools/                   # Legal reasoning tools
+│   ├── LegalThinkTool.ts    # Structured reasoning
+│   ├── LegalVerifyWithAPITool.ts # EU database verification
+│   └── ...                  # Other specialized tools
+└── utils/                   # Utilities
+    └── logger.ts            # Logging system
 ```
 
-## Repository
+## 🔧 Environment Variables
 
-This project is available on GitHub at:
-https://github.com/yoda-digital/mcp-cerebra-legal-server
+- **`PORT`** - Server port (default: 3000)
+- **`NODE_ENV`** - Environment (development/production) 
+- **`MCP_MODE`** - Server mode (http/stdio)
+- **`LOG_LEVEL`** - Logging level (info/debug/error)
 
-## References
+## 🔒 Security Features
 
-- [The "think" tool: Enabling Claude to stop and think in complex tool use situations](https://www.anthropic.com/engineering/claude-think-tool) - Anthropic Engineering Blog
+- **CORS Configuration** - Configurable origin restrictions
+- **Rate Limiting** - Built-in request throttling  
+- **Input Validation** - Comprehensive request validation
+- **Error Handling** - Graceful error responses
+- **Health Monitoring** - Built-in health checks
 
-## License
+## 📊 Monitoring & Observability
 
-MIT
+- **Health Endpoint** - `/health` for uptime monitoring
+- **Request Logging** - Structured logging for all requests
+- **Error Tracking** - Comprehensive error reporting  
+- **Performance Metrics** - Built-in timing and memory tracking
+
+## 🔍 Citation Examples
+
+The server generates professional legal citations with direct EUR-Lex links:
+
+```markdown
+## Relevant EU Legal Sources
+
+1. Council Directive 2004/18/EC of 31 March 2004 (on the coordination of procedures for the award of public works contracts) [EUR-Lex](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32004L0018)
+
+2. Commission Regulation (EU) No 1234/2009 of 15 December 2009 (concerning the application of Articles 87 and 88 of the EC Treaty to aid in the form of guarantees) [EUR-Lex](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009R1234)
+```
+
+See [CITATION_EXAMPLES.md](./CITATION_EXAMPLES.md) for more examples.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)  
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
+
+## 📄 License
+
+This project is licensed under the ISC License.
+
+## 🙋‍♂️ Support
+
+For support and questions:
+- Create an issue on GitHub  
+- Documentation: [DEPLOYMENT.md](./DEPLOYMENT.md)
+- Citation Examples: [CITATION_EXAMPLES.md](./CITATION_EXAMPLES.md)
+
+---
+
+**Built for legal professionals who demand accuracy, efficiency, and proper source attribution.**
+
+🌐 **Deploy once, use everywhere** - Perfect for teams and non-technical users!

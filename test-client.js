@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 
-const { spawn } = require('child_process');
-const path = require('path');
+import { spawn } from 'child_process';
+import { fileURLToPath } from 'url';
+import path from 'path';
 
 // Path to the MCP server executable
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const serverPath = path.join(__dirname, 'build', 'index.js');
 
 // Spawn the server process
@@ -41,25 +44,25 @@ serverProcess.stdout.on('data', (data) => {
     const response = JSON.parse(responseData);
     console.log('Received response:', JSON.stringify(response, null, 2));
     
-    // Test the legal_think tool
-    const thinkRequest = {
+    // Test the legal_verify_with_api tool
+    const verifyRequest = {
       jsonrpc: '2.0',
       id: 2,
       method: 'tools/call',
       params: {
-        name: 'legal_think',
+        name: 'legal_verify_with_api',
         arguments: {
-          thought: 'Analyzing ANSC contestation where claimant argues technical specifications were too restrictive.',
-          thoughtNumber: 1,
-          totalThoughts: 5,
-          nextThoughtNeeded: true,
-          requestTemplate: true
+          query: 'EU procurement directive technical specifications requirements',
+          searchTerms: ['procurement', 'directive', 'technical specification'],
+          verificationScope: 'eurlex',
+          maxResults: 5,
+          includeAnalysis: true
         }
       }
     };
     
-    // Send the think request
-    serverProcess.stdin.write(JSON.stringify(thinkRequest) + '\n');
+    // Send the verify request
+    serverProcess.stdin.write(JSON.stringify(verifyRequest) + '\n');
     
     // Clear the response data for the next response
     responseData = '';
